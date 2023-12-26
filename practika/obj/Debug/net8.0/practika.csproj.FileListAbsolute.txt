@@ -1,0 +1,14 @@
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.AssemblyInfoInputs.cache
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.AssemblyInfo.cs
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.csproj.CoreCompileInputs.cache
+C:\Users\dimap\source\repos\practika\practika\bin\Debug\net8.0\practika.exe
+C:\Users\dimap\source\repos\practika\practika\bin\Debug\net8.0\practika.deps.json
+C:\Users\dimap\source\repos\practika\practika\bin\Debug\net8.0\practika.runtimeconfig.json
+C:\Users\dimap\source\repos\practika\practika\bin\Debug\net8.0\practika.dll
+C:\Users\dimap\source\repos\practika\practika\bin\Debug\net8.0\practika.pdb
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.dll
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\refint\practika.dll
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.pdb
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.genruntimeconfig.cache
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\ref\practika.dll
