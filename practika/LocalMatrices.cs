@@ -20,7 +20,9 @@ namespace practika
         private double[,] _massR2;
         private double[,] _massZ;
         private double[,] _mass;
-        public LocalMatrices(Grid grid)
+        private double[] _q;
+        private double _t;
+        public LocalMatrices(Grid grid, double[] q, double t)
         {
             hr = grid.nodes[1].r - grid.nodes[0].r;
             hz = grid.nodes[Config.NElemX + 1].z - grid.nodes[0].z;
@@ -32,25 +34,28 @@ namespace practika
             _massR2 = new double[2, 2];
             _massZ = new double[2, 2];
             _mass = new double[4, 4];
+            _q = q;
+            _t = t;
             CalcLocalMatrices(grid);
         }
         public void CalcLocalMatrices(Grid grid)
         {
             for (int i = 0; i < _grid.elems.Count; i++)
             {
-                grid.elems[i] = new Elem(CalcAMatrix(_grid.elems[i]), _grid.elems[i]);
+                grid.elems[i] = new Elem(CalcAMatrix(_grid.elems[i]),CalcMassMatrix(_grid.elems[i]), _grid.elems[i]);
                 grid.elems[i] = new Elem(CalcBVector(_grid.elems[i]), _grid.elems[i]);
             }
         }
         public double[,] CalcAMatrix(Elem elem)
         {
             CalcMassMatrix(elem);
+            _mass.Multiply(1 / _grid.time.ht, _mass);
             CalcStiffnessMatrix(elem);
             double[,] result = new double[4, 4];
             _mass.Sum(_stiffness, result);
             return result;
         }
-        public void CalcMassMatrix(Elem elem)
+        public double[,] CalcMassMatrix(Elem elem)
         {
             var massR = CalcLocalMassRMatrix(elem);
             var massZ = CalcLocalMassZMatrix();
@@ -63,6 +68,7 @@ namespace practika
                     _mass[j, i] = _mass[i, j];
                 }
             }
+            return _mass;
         }
         public double[] CalcBVector(Elem elem)
         {
@@ -72,7 +78,7 @@ namespace practika
             {
                 for (var j = 0; j < _mass.Length / (_mass.GetUpperBound(0) + 1); j++)
                 {
-                    b[j] += _mass[j, i] / Config.gamma * Func.FunctionB(_grid.nodes[elem.index[i]].r, _grid.nodes[elem.index[i]].z);
+                    b[j] += _mass[j, i] / Config.gamma * Func.FunctionB(_grid.nodes[elem.index[i]].r, _grid.nodes[elem.index[i]].z, _t) + (_mass[j, i] / _grid.time.ht) *_q[j];
                 }
             }
             return b;

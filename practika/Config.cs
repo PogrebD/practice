@@ -18,6 +18,7 @@ namespace practika
         public const double x1 = 2, x2 = 4, y1 = 2, y2 = 4;
         public const string elemPath = @"C:\Users\dimap\source\repos\practika\practika\Input\Elem.txt";
         public const string nodePath = @"C:\Users\dimap\source\repos\practika\practika\Input\Node.txt";
+        public const string timePath = @"C:\Users\dimap\source\repos\practika\practika\Input\Time.txt";
         public const string bc1Path = @"C:\Users\dimap\source\repos\practika\practika\InputBC\Bc1.txt";
         public const string bc2Path = @"C:\Users\dimap\source\repos\practika\practika\InputBC\Bc2.txt";
         public const string bc3Path = @"C:\Users\dimap\source\repos\practika\practika\InputBC\Bc3.txt";

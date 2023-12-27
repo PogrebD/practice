@@ -93,5 +93,6 @@ namespace practika
                 d[i] = a[i] + b * c[i];
             return d;
         }
+        public double[] GetQ() => q;
     }
 }

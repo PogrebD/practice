@@ -14,6 +14,7 @@ namespace practika
         public double[] _globaleATriangle;
         public double[] _globaleAdiag;
         public double[] _globalVectorB;
+        public double[] _globalVectorD;
         public List<int> ig;
         private List<int> ig2;
         public List<int> jg;
@@ -30,6 +31,7 @@ namespace practika
             _globaleAdiag = new double[ig.Count];
             _globaleATriangle = new double[jg.Count];
             _globalVectorB = new double[ig.Count];
+            _globalVectorD = new double[ig.Count];
             LocalMatricesInsertion();
         }
         public void Portrait()

@@ -4,4 +4,4 @@ using praktika.generators;
 
 Console.WriteLine("Hello, World!");
 Solution solution = new();
-solution.Run();
+

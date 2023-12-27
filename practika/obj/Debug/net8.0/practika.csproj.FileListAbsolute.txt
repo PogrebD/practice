@@ -12,3 +12,4 @@ C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\refint\practika.d
 C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.pdb
 C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.genruntimeconfig.cache
 C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\ref\practika.dll
+C:\Users\dimap\source\repos\practika\practika\obj\Debug\net8.0\practika.sourcelink.json

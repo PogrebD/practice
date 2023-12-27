@@ -15,12 +15,13 @@ namespace practika
         public Bc2 bc2;
         public Bc3 bc3;
         BcInputer bcInputer;
-        public BoundaryConditions(GlobalMatrices globalMatrices, double hr, double hz, Grid grid)
+        public BoundaryConditions(GlobalMatrices globalMatrices, double hr, double hz, Grid grid, double t)
         {
             bcInputer = new(this);
-            bc2.Apply(globalMatrices, hr, hz, grid);
-            bc3.Apply(globalMatrices,hr, hz, grid);
-            bc1.Apply(globalMatrices,grid);
+
+            bc2.Apply(globalMatrices, hr, hz, grid, t);
+            bc3.Apply(globalMatrices, hr, hz, grid, t);
+            bc1.Apply(globalMatrices, grid, t);
         }
     }
     class Bc1
@@ -35,7 +36,7 @@ namespace practika
         private List<int[]> nodeIndices;
         private List<double> u;
 
-        public void Apply(GlobalMatrices globalMatrices, Grid grid)
+        public void Apply(GlobalMatrices globalMatrices, Grid grid, double t)
         {
             for (int i = 0; i < nBc; i++)
             {
@@ -45,11 +46,11 @@ namespace practika
                     {
                         for (int j = globalMatrices.ig[nodeIndices[i][k] - 1]; j < globalMatrices.ig[nodeIndices[i][k]]; j++)
                         {
-                            globalMatrices._globalVectorB[globalMatrices.jg[j]] -= Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z) * globalMatrices._globaleATriangle[j];
+                            globalMatrices._globalVectorB[globalMatrices.jg[j]] -= Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z, t) * globalMatrices._globaleATriangle[j];
                             globalMatrices._globaleATriangle[j] = 0;
                         }
                     }
-                    globalMatrices._globalVectorB[nodeIndices[i][k]] = Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z);
+                    globalMatrices._globalVectorB[nodeIndices[i][k]] = Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z, t);
                     globalMatrices._globaleAdiag[nodeIndices[i][k]] = 1;
                     for (int j = nodeIndices[i][k] + 1; j < grid.nodes.Count; j++)
                     {
@@ -57,7 +58,7 @@ namespace practika
                         {
                             if (globalMatrices.jg[h] == nodeIndices[i][k])
                             {
-                                globalMatrices._globalVectorB[j] -= Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z) * globalMatrices._globaleATriangle[h];
+                                globalMatrices._globalVectorB[j] -= Func.u(grid.nodes[nodeIndices[i][k]].r, grid.nodes[nodeIndices[i][k]].z, t) * globalMatrices._globaleATriangle[h];
                                 globalMatrices._globaleATriangle[h] = 0;
                             }
                         }
@@ -68,28 +69,37 @@ namespace practika
     }
     class Bc2
     {
-        public Bc2(List<int[]> nodeIndices, List<double[]> theta, int nBc)
+        public Bc2(List<int[]> nodeIndices, int nBc)
         {
             this.nodeIndices = nodeIndices;
-            this.theta = theta;
+            this.theta = new double[2];
             this.nBc = nBc;
         }
         private int nBc;
         private List<int[]> nodeIndices;
-        private List<double[]> theta;
-        public void Apply(GlobalMatrices globalMatrices, double hr, double hz, Grid grid)
+        private double[] theta;
+        public void Apply(GlobalMatrices globalMatrices, double hr, double hz, Grid grid, double t)
         {
             for (int i = 0; i < nBc; i++)
             {
+                int k = 1;
+                if (nodeIndices[i][0] < Config.NElemX)
+                {
+                    k = -1;
+                }
                 if (nodeIndices[i][1] - nodeIndices[i][0] == 1)//1x1??
                 {
-                    globalMatrices._globalVectorB[nodeIndices[i][0]] += ((hr * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[i][0] * 2 + theta[i][1])) + ((hr * hr / 12) * (theta[i][0] + theta[i][1]));
-                    globalMatrices._globalVectorB[nodeIndices[i][1]] += ((hr * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[i][0] + theta[i][1] * 2)) + ((hr * hr / 12) * (theta[i][0] + theta[i][1] * 3));
+                    theta[0] = k * Func.thetar(grid.nodes[nodeIndices[i][0]].r, grid.nodes[nodeIndices[i][0]].z, t);
+                    theta[0] = k * Func.thetar(grid.nodes[nodeIndices[i][1]].r, grid.nodes[nodeIndices[i][1]].z, t);
+                    globalMatrices._globalVectorB[nodeIndices[i][0]] += ((hr * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[0] * 2 + theta[1])) + ((hr * hr / 12) * (theta[0] + theta[1]));
+                    globalMatrices._globalVectorB[nodeIndices[i][1]] += ((hr * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[0] + theta[1] * 2)) + ((hr * hr / 12) * (theta[0] + theta[1] * 3));
                 }// ловушечная r
                 else
                 {
-                    globalMatrices._globalVectorB[nodeIndices[i][0]] += (hz * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[i][0] * 2 + theta[i][1]);
-                    globalMatrices._globalVectorB[nodeIndices[i][1]] += (hz * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[i][0] + theta[i][1] * 2);
+                    theta[0] = k * Func.thetaz(grid.nodes[nodeIndices[i][0]].r, grid.nodes[nodeIndices[i][0]].z, t);
+                    theta[0] = k * Func.thetaz(grid.nodes[nodeIndices[i][1]].r, grid.nodes[nodeIndices[i][1]].z, t);
+                    globalMatrices._globalVectorB[nodeIndices[i][0]] += (hz * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[0] * 2 + theta[1]);
+                    globalMatrices._globalVectorB[nodeIndices[i][1]] += (hz * grid.nodes[nodeIndices[i][0]].r / 6) * (theta[0] + theta[1] * 2);
                 }
             }
         }
@@ -107,7 +117,7 @@ namespace practika
         private List<int[]> nodeIndices;
         private List<double[]> u;
         private List<double> beta;
-        public void Apply(GlobalMatrices globalMatrices, double hr, double hz, Grid grid)
+        public void Apply(GlobalMatrices globalMatrices, double hr, double hz, Grid grid, double t)
         {
             for (int i = 0; i < nBc; i++)
             {

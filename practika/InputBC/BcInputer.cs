@@ -48,7 +48,7 @@ namespace practika.InputBC
                     doubles.Add(new double[] { double.Parse(elemArray[2]),
                         double.Parse(elemArray[3]) });
                 }
-                boundaryConditions.bc2 = new Bc2(ints, doubles, nBc2);
+                boundaryConditions.bc2 = new Bc2(ints, nBc2);
             }
 
             using (StreamReader reader = new(Config.bc3Path))

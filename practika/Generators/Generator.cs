@@ -13,6 +13,7 @@ namespace praktika.generators
             elemGenerator = new ElemGenerator();
             matGenerator = new MatGenerator();
             nodeGenerator = new NodeGenerator();
+            Generate();
         }
 
         public IGenerator elemGenerator;

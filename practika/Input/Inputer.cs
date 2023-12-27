@@ -14,10 +14,13 @@ namespace praktika.Input
     {
         ElemInputer elemInputer = new();
         NodeInputer nodeInputer = new();
+        TimeInputer timeInputer = new();
+        public Time time = new();
         public Inputer (Grid grid)
         {
             elemInputer.Input(grid);
             nodeInputer.Input(grid);
+            time = timeInputer.Input(grid);
         }
     }
 }
